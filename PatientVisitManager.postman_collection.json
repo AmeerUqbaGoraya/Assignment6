@@ -1,0 +1,521 @@
+{
+	"info": {
+		"_postman_id": "patient-visit-manager-api",
+		"name": "Patient Visit Manager API",
+		"description": "Comprehensive API collection for Patient Visit Manager - .NET Core Web API Assignment 6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:7001/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success) {",
+									"        pm.collectionVariables.set('auth_token', response.data.token);",
+									"        console.log('Token saved:', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@hospital.com\",\n    \"password\": \"Admin123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"Test123!\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\",\n    \"role\": \"Receptionist\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"Test123!\",\n    \"newPassword\": \"NewTest123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/change-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Patients",
+			"item": [
+				{
+					"name": "Get All Patients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/patients?pageNumber=1&pageSize=10&searchTerm=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"patients"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "searchTerm",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Patient by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/patients/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"patients",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Patient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"dateOfBirth\": \"1990-01-15\",\n    \"gender\": \"Male\",\n    \"email\": \"john.doe@email.com\",\n    \"phone\": \"555-1234\",\n    \"address\": \"123 Main St, City, State 12345\",\n    \"emergencyContact\": \"Jane Doe\",\n    \"emergencyPhone\": \"555-5678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/patients",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"patients"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Patient",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe Updated\",\n    \"dateOfBirth\": \"1990-01-15\",\n    \"gender\": \"Male\",\n    \"email\": \"john.doe.updated@email.com\",\n    \"phone\": \"555-1234\",\n    \"address\": \"456 Updated St, City, State 12345\",\n    \"emergencyContact\": \"Jane Doe\",\n    \"emergencyPhone\": \"555-5678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/patients/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"patients",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Patient",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/patients/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"patients",
+								"1"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Doctors",
+			"item": [
+				{
+					"name": "Get All Doctors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/doctors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"doctors"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Doctor by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/doctors/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"doctors",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Doctor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"specialization\": \"Cardiology\",\n    \"licenseNumber\": \"MD123456\",\n    \"email\": \"dr.smith@hospital.com\",\n    \"phone\": \"555-9999\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/doctors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"doctors"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Visits",
+			"item": [
+				{
+					"name": "Get All Visits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/visits",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visits"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Visit by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/visits/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visits",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Schedule Visit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"patientID\": 1,\n    \"doctorID\": 1,\n    \"visitDate\": \"2025-08-20T10:00:00\",\n    \"visitType\": \"Regular\",\n    \"reason\": \"Regular checkup\",\n    \"duration\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/visits",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visits"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Visit Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Completed\",\n    \"notes\": \"Visit completed successfully. Patient in good health.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/visits/1/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visits",
+								"1",
+								"status"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Fee Schedule",
+			"item": [
+				{
+					"name": "Get All Services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/feeschedule",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"feeschedule"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Service by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/feeschedule/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"feeschedule",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serviceName\": \"Blood Pressure Check\",\n    \"serviceCode\": \"BP001\",\n    \"amount\": 25.00,\n    \"description\": \"Standard blood pressure measurement\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/feeschedule",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"feeschedule"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Activity Logs",
+			"item": [
+				{
+					"name": "Get Activity Logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/activitylogs?pageNumber=1&pageSize=10&entityType=&startDate=&endDate=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"activitylogs"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "entityType",
+									"value": ""
+								},
+								{
+									"key": "startDate",
+									"value": ""
+								},
+								{
+									"key": "endDate",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
