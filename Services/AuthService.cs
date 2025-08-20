@@ -53,14 +53,12 @@ namespace Assignment6.Services
                 return false;
             }
 
-            var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password, salt);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
 
             var user = new User
             {
                 Email = registerDto.Email,
                 PasswordHash = passwordHash,
-                PasswordSalt = salt,
                 Role = registerDto.Role,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName
@@ -78,10 +76,9 @@ namespace Assignment6.Services
                 return false;
             }
 
-            var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword, salt);
+            var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
 
-            return await _userRepository.UpdatePasswordAsync(userId, newPasswordHash, salt);
+            return await _userRepository.UpdatePasswordAsync(userId, newPasswordHash);
         }
 
         private string GenerateJwtToken(User user)

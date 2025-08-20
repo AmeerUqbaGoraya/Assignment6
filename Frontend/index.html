@@ -200,6 +200,206 @@
             </div>
         </div>
 
+        <!-- Create Patient Section -->
+        <div id="createPatientSection" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Add New Patient</h2>
+                <button class="btn btn-secondary" onclick="showPatients()">Back to Patients</button>
+            </div>
+            
+            <form id="createPatientForm" onsubmit="createPatient(event)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createFirstName" class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="createFirstName" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createLastName" class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="createLastName" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createDateOfBirth" class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-control" id="createDateOfBirth" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createGender" class="form-label">Gender *</label>
+                            <select class="form-control" id="createGender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="createEmail">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createPhone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="createPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="createAddress" class="form-label">Address</label>
+                    <textarea class="form-control" id="createAddress" rows="3"></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createEmergencyContact" class="form-label">Emergency Contact</label>
+                            <input type="text" class="form-control" id="createEmergencyContact">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="createEmergencyPhone" class="form-label">Emergency Phone</label>
+                            <input type="tel" class="form-control" id="createEmergencyPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Create Patient</button>
+                <button type="button" class="btn btn-secondary" onclick="showPatients()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Edit Patient Section -->
+        <div id="editPatientSection" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Edit Patient</h2>
+                <button class="btn btn-secondary" onclick="showPatients()">Back to Patients</button>
+            </div>
+            
+            <form id="editPatientForm" onsubmit="updatePatient(event)">
+                <input type="hidden" id="editPatientId">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editFirstName" class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="editFirstName" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editLastName" class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="editLastName" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editDateOfBirth" class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-control" id="editDateOfBirth" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editGender" class="form-label">Gender *</label>
+                            <select class="form-control" id="editGender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editPhone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="editPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="editAddress" class="form-label">Address</label>
+                    <textarea class="form-control" id="editAddress" rows="3"></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editEmergencyContact" class="form-label">Emergency Contact</label>
+                            <input type="text" class="form-control" id="editEmergencyContact">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editEmergencyPhone" class="form-label">Emergency Phone</label>
+                            <input type="tel" class="form-control" id="editEmergencyPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Update Patient</button>
+                <button type="button" class="btn btn-secondary" onclick="showPatients()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Patient Details Section -->
+        <div id="patientDetailsSection" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Patient Details</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="editPatient(this.parentElement.parentElement.parentElement.dataset.patientId)">Edit Patient</button>
+                    <button class="btn btn-secondary" onclick="showPatients()">Back to Patients</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Personal Information</h5>
+                            <p><strong>Name:</strong> <span id="detailPatientName"></span></p>
+                            <p><strong>Age:</strong> <span id="detailPatientAge"></span></p>
+                            <p><strong>Gender:</strong> <span id="detailPatientGender"></span></p>
+                            <p><strong>Email:</strong> <span id="detailPatientEmail"></span></p>
+                            <p><strong>Phone:</strong> <span id="detailPatientPhone"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Contact Information</h5>
+                            <p><strong>Address:</strong> <span id="detailPatientAddress"></span></p>
+                            <p><strong>Emergency Contact:</strong> <span id="detailPatientEmergencyContact"></span></p>
+                            <p><strong>Emergency Phone:</strong> <span id="detailPatientEmergencyPhone"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Other sections will be added here -->
     </div>
 

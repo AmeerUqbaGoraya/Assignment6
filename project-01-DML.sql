@@ -1,9 +1,10 @@
--- Sample Users (passwords should be hashed in real implementation)
-INSERT INTO Users (Email, PasswordHash, PasswordSalt, Role, FirstName, LastName) VALUES
-('admin@hospital.com', 'hashed_password_1', 'salt_1', 'Admin', 'System', 'Administrator'),
-('dr.smith@hospital.com', 'hashed_password_2', 'salt_2', 'Doctor', 'John', 'Smith'),
-('dr.johnson@hospital.com', 'hashed_password_3', 'salt_3', 'Doctor', 'Sarah', 'Johnson'),
-('receptionist@hospital.com', 'hashed_password_4', 'salt_4', 'Receptionist', 'Mary', 'Williams');
+-- Sample Users with properly hashed passwords using BCrypt
+-- Passwords: admin=admin, dr.smith=dr.smith, dr.johnson=dr.johnson, receptionist=receptionist
+INSERT INTO Users (Email, PasswordHash, Role, FirstName, LastName) VALUES
+('admin@hospital.com', '$2a$11$V4a8Jr78arObr..K2FCXSuXBbKGaDQpYeyv.tTmtzH/5rwYuH62i2', 'Admin', 'System', 'Administrator'),
+('dr.smith@hospital.com', '$2a$11$bZOD8tEY4wEmWgcAZ1LH6OoZKM2Rmmf9feCx6eDPxSu1Tw9gzIAZG', 'Doctor', 'John', 'Smith'),
+('dr.johnson@hospital.com', '$2a$11$QEiOScg07ygUm2QKmxLAteeCQpAQqoadcWO5yAlsitR2r1Fu3t9T.', 'Doctor', 'Sarah', 'Johnson'),
+('receptionist@hospital.com', '$2a$11$R/uF3TUI/hlpmWeJZhGHl.kuBT4IQ0WLXXOF70t5Qwe/NfEc30ai2', 'Receptionist', 'Mary', 'Williams');
 
 -- Sample Doctors
 INSERT INTO Doctors (UserID, FirstName, LastName, Specialization, LicenseNumber, Email, Phone) VALUES

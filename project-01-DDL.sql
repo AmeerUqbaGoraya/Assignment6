@@ -3,7 +3,6 @@ CREATE TABLE Users (
     UserID int IDENTITY(1,1) PRIMARY KEY,
     Email nvarchar(255) UNIQUE NOT NULL,
     PasswordHash nvarchar(255) NOT NULL,
-    PasswordSalt nvarchar(255) NOT NULL,
     Role nvarchar(50) NOT NULL CHECK (Role IN ('Admin', 'Doctor', 'Receptionist')),
     FirstName nvarchar(100) NOT NULL,
     LastName nvarchar(100) NOT NULL,

@@ -7,7 +7,7 @@ namespace Assignment6.Repository.Interfaces
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByIdAsync(int userId);
         Task<int> CreateAsync(User user);
-        Task<bool> UpdatePasswordAsync(int userId, string passwordHash, string passwordSalt);
+        Task<bool> UpdatePasswordAsync(int userId, string passwordHash);
         Task<bool> EmailExistsAsync(string email);
     }
 

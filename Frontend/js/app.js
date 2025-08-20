@@ -1,7 +1,4 @@
-// Author: Your Name
-// Date: August 19, 2025
 
-// Global variables
 let currentUser = null;
 let authToken = null;
 const API_BASE_URL = '/api';
@@ -49,6 +46,8 @@ function updateAuthUI(isAuthenticated) {
 function setupEventListeners() {
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
     document.getElementById('registerForm').addEventListener('submit', handleRegister);
+    document.getElementById('createPatientForm').addEventListener('submit', createPatient);
+    document.getElementById('editPatientForm').addEventListener('submit', updatePatient);
 }
 
 // Navigation functions
@@ -225,9 +224,14 @@ function logout() {
 }
 
 // Patient functions
-async function loadPatients() {
+async function loadPatients(searchTerm = '') {
     try {
-        const response = await fetch(`${API_BASE_URL}/patients`, {
+        let url = `${API_BASE_URL}/patients`;
+        if (searchTerm) {
+            url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+        }
+        
+        const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             }
@@ -297,20 +301,206 @@ function renderPatientsTable(patients) {
 
 function searchPatients() {
     const searchTerm = document.getElementById('patientSearch').value;
-    // Implement search functionality
-    console.log('Searching for:', searchTerm);
+    if (searchTerm.trim()) {
+        loadPatients(searchTerm);
+    } else {
+        loadPatients();
+    }
 }
 
 function showCreatePatient() {
-    showAlert('Create patient functionality coming soon!', 'info');
+    if (!isAuthenticated()) {
+        showAlert('Please login to access this section', 'warning');
+        return;
+    }
+    
+    // Check if user has permission (Admin or Receptionist)
+    if (currentUser?.role !== 'Admin' && currentUser?.role !== 'Receptionist') {
+        showAlert('You do not have permission to create patients', 'danger');
+        return;
+    }
+    
+    hideAllSections();
+    document.getElementById('createPatientSection').classList.remove('d-none');
+}
+
+async function createPatient(event) {
+    event.preventDefault();
+    
+    const formData = {
+        firstName: document.getElementById('createFirstName').value,
+        lastName: document.getElementById('createLastName').value,
+        dateOfBirth: document.getElementById('createDateOfBirth').value,
+        gender: document.getElementById('createGender').value,
+        email: document.getElementById('createEmail').value,
+        phone: document.getElementById('createPhone').value,
+        address: document.getElementById('createAddress').value,
+        emergencyContact: document.getElementById('createEmergencyContact').value,
+        emergencyPhone: document.getElementById('createEmergencyPhone').value
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/patients`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('Patient created successfully!', 'success');
+            document.getElementById('createPatientForm').reset();
+            showPatients();
+        } else {
+            showAlert(result.message || 'Failed to create patient', 'danger');
+        }
+    } catch (error) {
+        console.error('Create patient error:', error);
+        showAlert('An error occurred while creating the patient', 'danger');
+    }
 }
 
 function viewPatient(patientId) {
-    showAlert(`View patient ${patientId} functionality coming soon!`, 'info');
+    if (!isAuthenticated()) {
+        showAlert('Please login to access this section', 'warning');
+        return;
+    }
+    
+    loadPatientDetails(patientId);
+}
+
+async function loadPatientDetails(patientId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/patients/${patientId}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            displayPatientDetails(result.data);
+        } else {
+            showAlert(result.message || 'Failed to load patient details', 'danger');
+        }
+    } catch (error) {
+        console.error('Load patient details error:', error);
+        showAlert('An error occurred while loading patient details', 'danger');
+    }
+}
+
+function displayPatientDetails(patient) {
+    hideAllSections();
+    document.getElementById('patientDetailsSection').classList.remove('d-none');
+    
+    document.getElementById('detailPatientName').textContent = patient.fullName;
+    document.getElementById('detailPatientAge').textContent = patient.age;
+    document.getElementById('detailPatientGender').textContent = patient.gender;
+    document.getElementById('detailPatientEmail').textContent = patient.email || 'N/A';
+    document.getElementById('detailPatientPhone').textContent = patient.phone || 'N/A';
+    document.getElementById('detailPatientAddress').textContent = patient.address || 'N/A';
+    document.getElementById('detailPatientEmergencyContact').textContent = patient.emergencyContact || 'N/A';
+    document.getElementById('detailPatientEmergencyPhone').textContent = patient.emergencyPhone || 'N/A';
+    
+    // Store patient ID for edit functionality
+    document.getElementById('patientDetailsSection').dataset.patientId = patient.patientID;
 }
 
 function editPatient(patientId) {
-    showAlert(`Edit patient ${patientId} functionality coming soon!`, 'info');
+    if (!isAuthenticated()) {
+        showAlert('Please login to access this section', 'warning');
+        return;
+    }
+    
+    // Check if user has permission (Admin or Receptionist)
+    if (currentUser?.role !== 'Admin' && currentUser?.role !== 'Receptionist') {
+        showAlert('You do not have permission to edit patients', 'danger');
+        return;
+    }
+    
+    loadPatientForEdit(patientId);
+}
+
+async function loadPatientForEdit(patientId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/patients/${patientId}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            populateEditForm(result.data);
+        } else {
+            showAlert(result.message || 'Failed to load patient for editing', 'danger');
+        }
+    } catch (error) {
+        console.error('Load patient for edit error:', error);
+        showAlert('An error occurred while loading patient for editing', 'danger');
+    }
+}
+
+function populateEditForm(patient) {
+    hideAllSections();
+    document.getElementById('editPatientSection').classList.remove('d-none');
+    
+    document.getElementById('editPatientId').value = patient.patientID;
+    document.getElementById('editFirstName').value = patient.firstName;
+    document.getElementById('editLastName').value = patient.lastName;
+    document.getElementById('editDateOfBirth').value = patient.dateOfBirth.split('T')[0];
+    document.getElementById('editGender').value = patient.gender;
+    document.getElementById('editEmail').value = patient.email || '';
+    document.getElementById('editPhone').value = patient.phone || '';
+    document.getElementById('editAddress').value = patient.address || '';
+    document.getElementById('editEmergencyContact').value = patient.emergencyContact || '';
+    document.getElementById('editEmergencyPhone').value = patient.emergencyPhone || '';
+}
+
+async function updatePatient(event) {
+    event.preventDefault();
+    
+    const patientId = document.getElementById('editPatientId').value;
+    const formData = {
+        firstName: document.getElementById('editFirstName').value,
+        lastName: document.getElementById('editLastName').value,
+        dateOfBirth: document.getElementById('editDateOfBirth').value,
+        gender: document.getElementById('editGender').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value,
+        address: document.getElementById('editAddress').value,
+        emergencyContact: document.getElementById('editEmergencyContact').value,
+        emergencyPhone: document.getElementById('editEmergencyPhone').value
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/patients/${patientId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('Patient updated successfully!', 'success');
+            showPatients();
+        } else {
+            showAlert(result.message || 'Failed to update patient', 'danger');
+        }
+    } catch (error) {
+        console.error('Update patient error:', error);
+        showAlert('An error occurred while updating the patient', 'danger');
+    }
 }
 
 // Utility functions
