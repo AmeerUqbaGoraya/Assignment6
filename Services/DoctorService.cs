@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using Assignment6.Models.Domain;
 using Assignment6.Models.DTOs;
 using Assignment6.Repository.Interfaces;
@@ -146,10 +143,10 @@ namespace Assignment6.Services
                 DoctorID = doctor.DoctorID,
                 FirstName = doctor.FirstName,
                 LastName = doctor.LastName,
-                Specialization = doctor.Specialization,
-                LicenseNumber = doctor.LicenseNumber,
-                Email = doctor.Email,
-                Phone = doctor.Phone,
+                Specialization = doctor.Specialization ?? string.Empty,
+                LicenseNumber = doctor.LicenseNumber ?? string.Empty,
+                Email = doctor.Email ?? string.Empty,
+                Phone = doctor.Phone ?? string.Empty,
                 CreatedDate = doctor.CreatedDate
             };
         }
@@ -189,14 +186,15 @@ namespace Assignment6.Services
                 PatientID = visit.PatientID,
                 DoctorID = visit.DoctorID,
                 VisitDate = visit.VisitDate,
+                Notes = visit.Notes ?? string.Empty,
                 VisitType = visit.VisitType,
                 Status = visit.Status,
-                Reason = visit.Reason,
+                Reason = visit.Reason ?? string.Empty,
                 Duration = visit.Duration,
                 TotalAmount = visit.TotalAmount,
                 PatientName = visit.Patient?.FirstName ?? "Unknown",
                 DoctorName = visit.Doctor?.FirstName ?? "Unknown",
-                DoctorSpecialization = visit.Doctor?.Specialization,
+                DoctorSpecialization = visit.Doctor?.Specialization ?? string.Empty,
                 CreatedDate = visit.CreatedDate
             };
         }

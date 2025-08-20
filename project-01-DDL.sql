@@ -1,14 +1,3 @@
--- Author: Your Name
--- Date: August 19, 2025
--- Patient Visit Manager Database Schema
-
--- Create Database
-CREATE DATABASE PatientVisitManager;
-GO
-
-USE PatientVisitManager;
-GO
-
 -- Users table for authentication
 CREATE TABLE Users (
     UserID int IDENTITY(1,1) PRIMARY KEY,
@@ -120,5 +109,3 @@ CREATE INDEX IX_Visits_PatientID ON Visits(PatientID);
 CREATE INDEX IX_Visits_DoctorID ON Visits(DoctorID);
 CREATE INDEX IX_ActivityLogs_EntityType_EntityID ON ActivityLogs(EntityType, EntityID);
 CREATE INDEX IX_Users_Email ON Users(Email);
-
-GO

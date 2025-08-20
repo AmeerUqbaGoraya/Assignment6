@@ -1,10 +1,3 @@
--- Author: Your Name
--- Date: August 19, 2025
--- Patient Visit Manager Stored Procedures
-
-USE PatientVisitManager;
-GO
-
 -- Stored Procedure: Get Patient by ID with Visit History
 CREATE PROCEDURE sp_GetPatientWithVisits
     @PatientID INT

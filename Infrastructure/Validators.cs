@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using FluentValidation;
 using Assignment6.Models.DTOs;
 

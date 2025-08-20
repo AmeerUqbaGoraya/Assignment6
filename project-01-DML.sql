@@ -1,10 +1,3 @@
--- Author: Your Name
--- Date: August 19, 2025
--- Patient Visit Manager Sample Data
-
-USE PatientVisitManager;
-GO
-
 -- Sample Users (passwords should be hashed in real implementation)
 INSERT INTO Users (Email, PasswordHash, PasswordSalt, Role, FirstName, LastName) VALUES
 ('admin@hospital.com', 'hashed_password_1', 'salt_1', 'Admin', 'System', 'Administrator'),

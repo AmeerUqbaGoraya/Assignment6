@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using Assignment6.Models.Domain;
 using Assignment6.Models.DTOs;
 using Assignment6.Repository.Interfaces;
@@ -112,11 +109,11 @@ namespace Assignment6.Services
                 LastName = patient.LastName,
                 DateOfBirth = patient.DateOfBirth,
                 Gender = patient.Gender,
-                Email = patient.Email,
-                Phone = patient.Phone,
-                Address = patient.Address,
-                EmergencyContact = patient.EmergencyContact,
-                EmergencyPhone = patient.EmergencyPhone,
+                Email = patient.Email ?? string.Empty,
+                Phone = patient.Phone ?? string.Empty,
+                Address = patient.Address ?? string.Empty,
+                EmergencyContact = patient.EmergencyContact ?? string.Empty,
+                EmergencyPhone = patient.EmergencyPhone ?? string.Empty,
                 CreatedDate = patient.CreatedDate
             };
         }

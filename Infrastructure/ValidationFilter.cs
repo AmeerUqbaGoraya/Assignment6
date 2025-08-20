@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Assignment6.Models.DTOs;

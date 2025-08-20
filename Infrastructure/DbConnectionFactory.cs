@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using System.Data;
 using System.Data.SqlClient;
 

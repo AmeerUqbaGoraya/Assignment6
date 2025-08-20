@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 using Microsoft.AspNetCore.Mvc;
 using Assignment6.Models.DTOs;
 using Assignment6.Services;

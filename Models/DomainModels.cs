@@ -1,6 +1,3 @@
-// Author: Your Name
-// Date: August 19, 2025
-
 namespace Assignment6.Models.Domain
 {
     public class User
