@@ -1,0 +1,34 @@
+.patient-edit-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.patient-form-card {
+  width: 100%;
+}
+
+.patient-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-field {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+}

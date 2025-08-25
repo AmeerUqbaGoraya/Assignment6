@@ -1,0 +1,84 @@
+<div class="patient-view-container" *ngIf="patient">
+  <mat-card class="patient-info-card">
+    <mat-card-header>
+      <mat-card-title>Patient Details</mat-card-title>
+      <div class="header-actions">
+        <button mat-icon-button (click)="goBack()" matTooltip="Back to List">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-raised-button color="primary" *ngIf="canEdit()" (click)="editPatient()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </div>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="patient-details">
+        <div class="detail-section">
+          <h3>Personal Information</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Full Name:</label>
+              <span>{{patient.firstName}} {{patient.lastName}}</span>
+            </div>
+            <div class="detail-item">
+              <label>Date of Birth:</label>
+              <span>{{formatDate(patient.dateOfBirth)}}</span>
+            </div>
+            <div class="detail-item">
+              <label>Gender:</label>
+              <span>{{patient.gender}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Contact Information</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Email:</label>
+              <span>{{patient.email}}</span>
+            </div>
+            <div class="detail-item">
+              <label>Phone:</label>
+              <span>{{patient.phone}}</span>
+            </div>
+            <div class="detail-item full-width">
+              <label>Address:</label>
+              <span>{{patient.address || 'Not provided'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Emergency Contact</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Contact Name:</label>
+              <span>{{patient.emergencyContact || 'Not provided'}}</span>
+            </div>
+            <div class="detail-item">
+              <label>Contact Phone:</label>
+              <span>{{patient.emergencyPhone || 'Not provided'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Insurance Information</h3>
+          <div class="detail-grid">
+            <div class="detail-item full-width">
+              <label>Insurance Details:</label>
+              <span>{{patient.insuranceInfo || 'Not provided'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="loading-container" *ngIf="!patient">
+  <p>Loading patient details...</p>
+</div>

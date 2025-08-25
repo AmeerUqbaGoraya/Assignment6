@@ -1,0 +1,112 @@
+<div class="create-patient-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Create New Patient</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #patientForm="ngForm" class="patient-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>First Name *</mat-label>
+            <input matInput 
+                   [(ngModel)]="patient.firstName" 
+                   name="firstName" 
+                   required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Last Name *</mat-label>
+            <input matInput 
+                   [(ngModel)]="patient.lastName" 
+                   name="lastName" 
+                   required>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date of Birth *</mat-label>
+            <input matInput 
+                   type="date" 
+                   [(ngModel)]="patient.dateOfBirth" 
+                   name="dateOfBirth" 
+                   required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Gender *</mat-label>
+            <mat-select [(ngModel)]="patient.gender" 
+                        name="gender" 
+                        required>
+              <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+                {{gender}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Phone *</mat-label>
+            <input matInput 
+                   [(ngModel)]="patient.phone" 
+                   name="phone" 
+                   required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email *</mat-label>
+            <input matInput 
+                   type="email" 
+                   [(ngModel)]="patient.email" 
+                   name="email" 
+                   required>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <textarea matInput 
+                    [(ngModel)]="patient.address" 
+                    name="address" 
+                    rows="3"></textarea>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Emergency Contact</mat-label>
+            <input matInput 
+                   [(ngModel)]="patient.emergencyContact" 
+                   name="emergencyContact">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Emergency Phone</mat-label>
+            <input matInput 
+                   [(ngModel)]="patient.emergencyPhone" 
+                   name="emergencyPhone">
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Insurance Information</mat-label>
+          <textarea matInput 
+                    [(ngModel)]="patient.insuranceInfo" 
+                    name="insuranceInfo" 
+                    rows="3"></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-raised-button 
+              color="primary" 
+              (click)="onSubmit()"
+              [disabled]="!patientForm.valid">
+        Create Patient
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
