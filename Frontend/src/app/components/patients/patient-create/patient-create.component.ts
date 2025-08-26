@@ -38,11 +38,11 @@ export class PatientCreateComponent {
     email: '',
     address: '',
     emergencyContact: '',
-    emergencyPhone: '',
-    insuranceInfo: ''
+    emergencyPhone: ''
   };
 
   genderOptions = ['Male', 'Female', 'Other'];
+  isLoading = false;
 
   constructor(
     private patientService: PatientService,
@@ -57,19 +57,23 @@ export class PatientCreateComponent {
       return;
     }
 
-    this.loaderService.show();
+    this.isLoading = true;
+    console.log('Creating patient:', this.patient);
+    
     this.patientService.createPatient(this.patient).subscribe({
       next: (response) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.log('Create response:', response);
         if (response.success) {
           this.snackBar.open('Patient created successfully', 'Close', { duration: 3000 });
           this.router.navigate(['/patients']);
         } else {
-          this.snackBar.open(response.message, 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to create patient', 'Close', { duration: 3000 });
         }
       },
       error: (error) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.error('Create error:', error);
         this.snackBar.open('Failed to create patient', 'Close', { duration: 3000 });
       }
     });

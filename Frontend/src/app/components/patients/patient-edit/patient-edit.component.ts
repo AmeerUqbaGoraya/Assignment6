@@ -39,12 +39,12 @@ export class PatientEditComponent implements OnInit {
     email: '',
     address: '',
     emergencyContact: '',
-    emergencyPhone: '',
-    insuranceInfo: ''
+    emergencyPhone: ''
   };
 
   genderOptions = ['Male', 'Female', 'Other'];
   patientId: number = 0;
+  isLoading = false;
 
   constructor(
     private patientService: PatientService,
@@ -62,10 +62,11 @@ export class PatientEditComponent implements OnInit {
   }
 
   loadPatient(): void {
-    this.loaderService.show();
+    this.isLoading = true;
     this.patientService.getPatient(this.patientId).subscribe({
       next: (response) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.log('Load patient response:', response);
         if (response.success && response.data) {
           const patient = response.data;
           this.patient = {
@@ -78,8 +79,7 @@ export class PatientEditComponent implements OnInit {
             email: patient.email,
             address: patient.address,
             emergencyContact: patient.emergencyContact,
-            emergencyPhone: patient.emergencyPhone,
-            insuranceInfo: patient.insuranceInfo || ''
+            emergencyPhone: patient.emergencyPhone
           };
         } else {
           this.snackBar.open('Patient not found', 'Close', { duration: 3000 });
@@ -87,7 +87,8 @@ export class PatientEditComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.error('Load patient error:', error);
         this.snackBar.open('Failed to load patient', 'Close', { duration: 3000 });
         this.router.navigate(['/patients']);
       }
@@ -100,19 +101,23 @@ export class PatientEditComponent implements OnInit {
       return;
     }
 
-    this.loaderService.show();
+    this.isLoading = true;
+    console.log('Updating patient:', this.patient);
+    
     this.patientService.updatePatient(this.patient).subscribe({
       next: (response) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.log('Update response:', response);
         if (response.success) {
           this.snackBar.open('Patient updated successfully', 'Close', { duration: 3000 });
           this.router.navigate(['/patients']);
         } else {
-          this.snackBar.open(response.message, 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to update patient', 'Close', { duration: 3000 });
         }
       },
       error: (error) => {
-        this.loaderService.hide();
+        this.isLoading = false;
+        console.error('Update error:', error);
         this.snackBar.open('Failed to update patient', 'Close', { duration: 3000 });
       }
     });

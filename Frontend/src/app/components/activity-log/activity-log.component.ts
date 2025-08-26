@@ -3,108 +3,56 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-interface ActivityLog {
-  id: number;
-  action: string;
-  userId: string;
-  userName: string;
-  timestamp: string;
-  details: string;
-}
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivityLogService, ActivityLog } from '../../services/activity-log.service';
 
 @Component({
   selector: 'app-activity-log',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule],
-  template: `
-    <div class="activity-log-container">
-      <h1>Activity Log</h1>
-      
-      <div class="table-container">
-        <table mat-table [dataSource]="activities" class="activities-table">
-          <ng-container matColumnDef="timestamp">
-            <th mat-header-cell *matHeaderCellDef>Date & Time</th>
-            <td mat-cell *matCellDef="let activity">{{formatDate(activity.timestamp)}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="userName">
-            <th mat-header-cell *matHeaderCellDef>User</th>
-            <td mat-cell *matCellDef="let activity">{{activity.userName}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td mat-cell *matCellDef="let activity">{{activity.action}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef>Details</th>
-            <td mat-cell *matCellDef="let activity">{{activity.details}}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-
-        <div class="no-data" *ngIf="activities.length === 0">
-          <mat-icon>history</mat-icon>
-          <p>No activity logs found</p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .activity-log-container {
-      padding: 20px;
-    }
-
-    .table-container {
-      margin-top: 20px;
-    }
-
-    .activities-table {
-      width: 100%;
-    }
-
-    .no-data {
-      text-align: center;
-      padding: 40px;
-      color: #666;
-    }
-
-    .no-data mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      margin-bottom: 16px;
-    }
-  `]
+  imports: [
+    CommonModule, 
+    MatTableModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    MatCardModule, 
+    MatProgressSpinnerModule
+  ],
+  templateUrl: './activity-log.component.html',
+  styleUrl: './activity-log.component.scss'
 })
 export class ActivityLogComponent implements OnInit {
   activities: ActivityLog[] = [];
   displayedColumns: string[] = ['timestamp', 'userName', 'action', 'details'];
+  isLoading = false;
+
+  constructor(private activityLogService: ActivityLogService) {}
 
   ngOnInit(): void {
-    // Mock data for now
-    this.activities = [
-      {
-        id: 1,
-        action: 'Patient Created',
-        userId: '1',
-        userName: 'Admin User',
-        timestamp: new Date().toISOString(),
-        details: 'Created patient John Doe'
+    this.loadActivityLog();
+  }
+
+  loadActivityLog(): void {
+    this.isLoading = true;
+    console.log('Loading activity log...');
+    
+    this.activityLogService.getActivityLog().subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        console.log('Activity log response:', response);
+        if (response.success && response.data) {
+          this.activities = response.data;
+        } else {
+          console.error('Failed to load activity log:', response.message);
+          this.activities = [];
+        }
       },
-      {
-        id: 2,
-        action: 'Patient Updated',
-        userId: '1',
-        userName: 'Admin User',
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-        details: 'Updated patient Jane Smith'
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Activity log error:', error);
+        this.activities = [];
       }
-    ];
+    });
   }
 
   formatDate(dateString: string): string {

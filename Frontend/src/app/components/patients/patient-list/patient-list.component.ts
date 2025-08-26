@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -15,7 +17,6 @@ import { Patient } from '../../../models/interfaces';
 import { PatientService } from '../../../services/patient.service';
 import { AuthService } from '../../../services/auth.service';
 import { LoaderService } from '../../../services/loader.service';
-import { DialogConfirmComponent } from '../../shared/dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-patient-list',
@@ -29,6 +30,8 @@ import { DialogConfirmComponent } from '../../shared/dialog-confirm/dialog-confi
     MatIconModule, 
     MatFormFieldModule, 
     MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
     MatSnackBarModule,
     MatDialogModule,
     MatTooltipModule
@@ -40,6 +43,8 @@ export class PatientListComponent implements OnInit {
   patients: Patient[] = [];
   allPatients: Patient[] = [];
   searchTerm: string = '';
+  genderFilter: string = '';
+  genderOptions: string[] = ['Male', 'Female', 'Other'];
   private searchSubject = new Subject<string>();
   displayedColumns: string[] = ['name', 'dateOfBirth', 'gender', 'phone', 'email', 'actions'];
 
@@ -58,7 +63,9 @@ export class PatientListComponent implements OnInit {
   ngOnInit(): void {
     this.loadPatients();
     console.log('PatientListComponent initialized');
-    console.log('Current user:', this.authService.getCurrentUser());
+    const currentUser = this.authService.getCurrentUser();
+    console.log('Current user:', currentUser);
+    console.log('User role:', currentUser?.role);
     console.log('Can create patients:', this.canCreatePatients());
     console.log('Can edit patients:', this.canEditPatients());
     console.log('Can delete patients:', this.canDeletePatients());
@@ -89,6 +96,34 @@ export class PatientListComponent implements OnInit {
     this.searchSubject.next(this.searchTerm);
   }
 
+  onGenderFilterChange(): void {
+    this.applyFilters();
+  }
+
+  private applyFilters(): void {
+    let filtered = [...this.allPatients];
+
+    // Apply search filter
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(patient =>
+        patient.firstName.toLowerCase().includes(term) ||
+        patient.lastName.toLowerCase().includes(term) ||
+        patient.email.toLowerCase().includes(term) ||
+        patient.phone.toLowerCase().includes(term)
+      );
+    }
+
+    // Apply gender filter
+    if (this.genderFilter) {
+      filtered = filtered.filter(patient =>
+        patient.gender === this.genderFilter
+      );
+    }
+
+    this.patients = filtered;
+  }
+
   performSearch(): void {
     if (!this.searchTerm.trim()) {
       this.patients = [...this.allPatients];
@@ -114,45 +149,50 @@ export class PatientListComponent implements OnInit {
 
   deletePatient(patient: Patient): void {
     const patientId = patient.patientID || patient.id;
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        title: 'Delete Patient',
-        message: `Are you sure you want to delete ${patient.firstName} ${patient.lastName}?`
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
-      if (confirmed && patientId) {
-        this.loaderService.show();
-        this.patientService.deletePatient(patientId).subscribe({
-          next: (response) => {
-            this.loaderService.hide();
-            if (response.success) {
-              this.snackBar.open('Patient deleted successfully', 'Close', { duration: 3000 });
-              this.loadPatients();
-            } else {
-              this.snackBar.open(response.message, 'Close', { duration: 3000 });
-            }
-          },
-          error: (error) => {
-            this.loaderService.hide();
-            this.snackBar.open('Failed to delete patient', 'Close', { duration: 3000 });
+    const confirmed = confirm(`Are you sure you want to delete ${patient.firstName} ${patient.lastName}?`);
+    
+    if (confirmed && patientId) {
+      console.log('Deleting patient:', patientId);
+      this.patientService.deletePatient(patientId).subscribe({
+        next: (response) => {
+          console.log('Delete response:', response);
+          if (response.success) {
+            this.snackBar.open('Patient deleted successfully', 'Close', { duration: 3000 });
+            this.loadPatients();
+          } else {
+            this.snackBar.open(response.message || 'Failed to delete patient', 'Close', { duration: 3000 });
           }
-        });
-      }
-    });
+        },
+        error: (error) => {
+          console.error('Delete error:', error);
+          this.snackBar.open('Failed to delete patient', 'Close', { duration: 3000 });
+        }
+      });
+    }
   }
 
   canCreatePatients(): boolean {
-    return this.authService.canCreatePatients();
+    const result = this.authService.canCreatePatients();
+    console.log('canCreatePatients result:', result);
+    return result;
   }
 
   canEditPatients(): boolean {
-    return this.authService.canEditPatients();
+    const result = this.authService.canEditPatients();
+    console.log('canEditPatients result:', result);
+    return result;
   }
 
   canDeletePatients(): boolean {
-    return this.authService.canDeletePatients();
+    const result = this.authService.canDeletePatients();
+    console.log('canDeletePatients result:', result);
+    return result;
+  }
+
+  canViewActivityLog(): boolean {
+    const result = this.authService.canViewActivityLog();
+    console.log('canViewActivityLog result:', result);
+    return result;
   }
 
   getFullName(patient: Patient): string {

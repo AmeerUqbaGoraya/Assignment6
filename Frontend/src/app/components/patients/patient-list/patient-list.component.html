@@ -13,21 +13,24 @@
           <mat-icon>clear</mat-icon>
         </button>
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filter by Gender</mat-label>
+        <mat-select [(ngModel)]="genderFilter" (selectionChange)="onGenderFilterChange()">
+          <mat-option value="">All Genders</mat-option>
+          <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+            {{gender}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       
       <button mat-raised-button 
               color="primary" 
+              *ngIf="canCreatePatients()"
               [routerLink]="['/patients/create']"
               class="add-patient-btn">
         <mat-icon>person_add</mat-icon>
         <span>Add New Patient</span>
-      </button>
-
-      <button mat-raised-button 
-              color="accent" 
-              [routerLink]="['/activity-log']"
-              class="activity-log-btn">
-        <mat-icon>history</mat-icon>
-        <span>Activity Log</span>
       </button>
     </div>
   </div>
@@ -70,6 +73,7 @@
           </button>
           
           <button mat-icon-button 
+                  *ngIf="canEditPatients()"
                   [routerLink]="['/patients/edit', patient.patientID || patient.id]"
                   matTooltip="Edit Patient"
                   class="action-btn edit-btn">
@@ -77,6 +81,7 @@
           </button>
           
           <button mat-icon-button 
+                  *ngIf="canDeletePatients()"
                   (click)="deletePatient(patient)"
                   matTooltip="Delete Patient"
                   class="action-btn delete-btn">

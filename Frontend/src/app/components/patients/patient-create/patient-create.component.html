@@ -12,7 +12,15 @@
             <input matInput 
                    [(ngModel)]="patient.firstName" 
                    name="firstName" 
-                   required>
+                   required
+                   maxlength="100"
+                   pattern="[a-zA-Z\s]+"
+                   #firstName="ngModel">
+            <mat-error *ngIf="firstName.invalid && firstName.touched">
+              <span *ngIf="firstName.errors?.['required']">First name is required</span>
+              <span *ngIf="firstName.errors?.['pattern']">Only letters and spaces allowed</span>
+              <span *ngIf="firstName.errors?.['maxlength']">Maximum 100 characters</span>
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">
@@ -20,7 +28,15 @@
             <input matInput 
                    [(ngModel)]="patient.lastName" 
                    name="lastName" 
-                   required>
+                   required
+                   maxlength="100"
+                   pattern="[a-zA-Z\s]+"
+                   #lastName="ngModel">
+            <mat-error *ngIf="lastName.invalid && lastName.touched">
+              <span *ngIf="lastName.errors?.['required']">Last name is required</span>
+              <span *ngIf="lastName.errors?.['pattern']">Only letters and spaces allowed</span>
+              <span *ngIf="lastName.errors?.['maxlength']">Maximum 100 characters</span>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -52,7 +68,15 @@
             <input matInput 
                    [(ngModel)]="patient.phone" 
                    name="phone" 
-                   required>
+                   required
+                   maxlength="20"
+                   pattern="^\+?[\d\s\-\(\)]+$"
+                   #phone="ngModel">
+            <mat-error *ngIf="phone.invalid && phone.touched">
+              <span *ngIf="phone.errors?.['required']">Phone is required</span>
+              <span *ngIf="phone.errors?.['pattern']">Invalid phone format</span>
+              <span *ngIf="phone.errors?.['maxlength']">Maximum 20 characters</span>
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">
@@ -61,7 +85,15 @@
                    type="email" 
                    [(ngModel)]="patient.email" 
                    name="email" 
-                   required>
+                   required
+                   maxlength="255"
+                   email
+                   #email="ngModel">
+            <mat-error *ngIf="email.invalid && email.touched">
+              <span *ngIf="email.errors?.['required']">Email is required</span>
+              <span *ngIf="email.errors?.['email']">Invalid email format</span>
+              <span *ngIf="email.errors?.['maxlength']">Maximum 255 characters</span>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -88,14 +120,6 @@
                    name="emergencyPhone">
           </mat-form-field>
         </div>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Insurance Information</mat-label>
-          <textarea matInput 
-                    [(ngModel)]="patient.insuranceInfo" 
-                    name="insuranceInfo" 
-                    rows="3"></textarea>
-        </mat-form-field>
       </form>
     </mat-card-content>
 
@@ -104,8 +128,8 @@
       <button mat-raised-button 
               color="primary" 
               (click)="onSubmit()"
-              [disabled]="!patientForm.valid">
-        Create Patient
+              [disabled]="!patientForm.valid || isLoading">
+        {{isLoading ? 'Creating...' : 'Create Patient'}}
       </button>
     </mat-card-actions>
   </mat-card>

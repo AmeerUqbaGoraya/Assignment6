@@ -18,7 +18,6 @@ export interface Patient {
   address: string;
   emergencyContact: string;
   emergencyPhone: string;
-  insuranceInfo?: string;
   fullName?: string;
   age?: number;
   createdDate?: string;
@@ -34,7 +33,6 @@ export interface CreatePatientRequest {
   address: string;
   emergencyContact: string;
   emergencyPhone: string;
-  insuranceInfo: string;
 }
 
 export interface UpdatePatientRequest extends CreatePatientRequest {
@@ -63,7 +61,10 @@ export interface ApiResponse<T = any> {
 
 export interface AuthResponse {
   token: string;
-  user: User;
+  role: string;
+  email: string;
+  fullName: string;
+  expiration: string;
 }
 
 export interface PagedResult<T> {

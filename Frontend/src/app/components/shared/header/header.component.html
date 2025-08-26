@@ -3,18 +3,6 @@
   
   <div class="spacer"></div>
   
-  <button mat-button (click)="navigateToPatients()">
-    <mat-icon>list</mat-icon>
-    Patients
-  </button>
-  
-  <button mat-button 
-          *ngIf="canCreatePatients()" 
-          (click)="navigateToCreatePatient()">
-    <mat-icon>add</mat-icon>
-    Add Patient
-  </button>
-  
   <button mat-button 
           *ngIf="canViewActivityLog()" 
           (click)="navigateToActivityLog()">

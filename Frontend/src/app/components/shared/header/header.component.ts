@@ -51,6 +51,6 @@ export class HeaderComponent {
   }
 
   canViewActivityLog(): boolean {
-    return this.authService.hasRole('Admin');
+    return this.authService.canViewActivityLog();
   }
 }

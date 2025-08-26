@@ -52,9 +52,19 @@ export class AuthService {
   private setSession(authResponse: AuthResponse): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('token', authResponse.token);
-      localStorage.setItem('user', JSON.stringify(authResponse.user));
+      
+      // Convert backend response to frontend User format
+      const user: User = {
+        id: 0, // Backend doesn't return ID in auth response
+        email: authResponse.email,
+        role: authResponse.role,
+        firstName: authResponse.fullName.split(' ')[0] || '',
+        lastName: authResponse.fullName.split(' ').slice(1).join(' ') || ''
+      };
+      
+      localStorage.setItem('user', JSON.stringify(user));
+      this.currentUserSubject.next(user);
     }
-    this.currentUserSubject.next(authResponse.user);
   }
 
   logout(): void {
@@ -95,5 +105,10 @@ export class AuthService {
   canDeletePatients(): boolean {
     const user = this.getCurrentUser();
     return user ? user.role === 'Admin' : false;
+  }
+
+  canViewActivityLog(): boolean {
+    const user = this.getCurrentUser();
+    return user ? ['Admin'].includes(user.role) : false;
   }
 }

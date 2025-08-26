@@ -76,7 +76,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
     {
-        policy.WithOrigins("http://localhost:5000", "https://localhost:5001", "http://127.0.0.1:5500")
+        policy.WithOrigins("http://localhost:4200", "http://localhost:51036", "http://localhost:5000", "https://localhost:5001", "http://127.0.0.1:5500")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -105,6 +105,30 @@ app.UseDefaultFiles(new DefaultFilesOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Frontend")),
     DefaultFileNames = new List<string> { "index.html" }
+});
+
+// Add security headers middleware
+app.Use(async (context, next) =>
+{
+    // Content Security Policy to prevent XSS
+    context.Response.Headers["Content-Security-Policy"] = 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+        "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
+        "font-src 'self' fonts.gstatic.com; " +
+        "img-src 'self' data:; " +
+        "connect-src 'self'";
+    
+    // Prevent clickjacking
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    
+    // Prevent MIME sniffing
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    
+    // XSS Protection
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    
+    await next();
 });
 
 app.UseStaticFiles(new StaticFileOptions
